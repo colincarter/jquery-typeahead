@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html lang="en">
+<head>
+  <title>jquery.fn.typeAhead Javascript tests</title>
+  <link rel="stylesheet" href="qunit.css" type="text/css" media="screen" />
+  <style type="text/css">
+    .hide {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1 id="qunit-header">jquery.fn.typeAhead Javascript tests</h1>
+  <h2 id="qunit-banner"></h2>
+  <h2 id="qunit-userAgent"></h2>
+  <ol id="qunit-tests"></ol>
+
+  <input type="text" name="testTextEl" id="testTextEl" class="hide"/>
+  <textarea id="testTextareaEl" class="hide"></textarea>
+
+  <script type="text/javascript" src="jquery.js"></script>
+  <script type="text/javascript" src="qunit.js"></script>
+  <script type="text/javascript" src="../src/jquery-typeahead.js"></script>
+
+  <script type="text/javascript">
+    module('jquery-typeahead tests');
+
+    test('Test typeAhead in jquery namespace', function() {
+      expect(1);
+      var $ip = $('#testTextEl');
+      ok(typeof $ip.typeAhead !== 'undefined', 'In namespace');
+    });
+
+    test('Test attach to non text element', function() {
+      expect(2);
+      try {
+        $('#testTextEl').typeAhead();
+        ok(true, 'Attached to okay element');
+      } catch (e) {
+        ok(false, 'Error thrown');
+      }
+
+
+      try {
+        $('#testTextareaEl').typeAhead();
+        ok(false, 'Exception not caught on non text element');
+      } catch (e) {
+        ok(true, 'Exception caught on non text element');
+      }
+    });
+
+    test('Produces correct result 1', function() {
+      var self = this;
+
+      stop();
+
+      $('#testTextEl').val('Hel');
+
+      $('#testTextEl').typeAhead({
+        source: ['Hello', 'Helper'],
+        scope: self,
+        finish: function(el, val, event) {
+          ok(this === self, 'Scope correct');
+          ok(val === 'Helper', 'Value returned is correct ' + val);
+          $('#testTextEl').removeTypeAhead();
+          start();
+        }
+      });
+
+      var event = jQuery.Event('keypress');
+      event.which = 112; // p
+      $('#testTextEl').trigger(event);
+      $('#testTextEl').blur();
+    });
+
+    test('Produces correct result 2', function() {
+      var self = this;
+
+      stop();
+
+      $('#testTextEl').val('Hel');
+
+      $('#testTextEl').typeAhead({
+        source: ['Hello', 'Helper'],
+        scope: self,
+        finish: function(el, val, event) {
+          ok(this === self, 'Scope correct');
+          ok(val === 'Hello', 'Value returned is correct ' + val);
+          $('#testTextEl').removeTypeAhead();
+          start();
+        }
+      });
+
+      var event = jQuery.Event('keypress');
+      event.which = 108; // l
+      $('#testTextEl').trigger(event);
+      $('#testTextEl').blur();
+    });
+
+    test('Can change options', function() {
+      stop();
+      $('#testTextEl').val('Hel');
+      $('#testTextEl').typeAhead({
+        source: ['Hello', 'Helper'],
+        finish: function(el, val, event) {
+          ok(val === 'Heldup', '1st value is correct ' + val);
+          $('#testTextEl').removeTypeAhead();
+          start();
+        }
+      });
+
+      $('#testTextEl').typeAhead('source', ['Hello', 'Helper', 'Heldup']);
+
+      var event = $.Event('keypress');
+      event.which = 100; // d
+      $('#testTextEl').trigger(event);
+      $('#testTextEl').blur();
+    });
+
+  </script>
+</body>
+</html>
