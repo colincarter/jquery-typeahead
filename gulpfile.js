@@ -3,6 +3,7 @@ var gulp = require('gulp'),
 	uglify = require('gulp-uglify'),
 	concat = require('gulp-concat'),
 	plumber = require('gulp-plumber'),
+	del = require('del'),
 	tsPath = "src/*.ts",
 	libPath = "lib",
 	typeDefs = "typings";
@@ -18,8 +19,13 @@ gulp.task('typescript', function() {
 	return tsResults.js.pipe(gulp.dest(libPath));
 });
 
+gulp.task('clean', function() {
+	del([libPath+'/*.js'])
+});
+
 gulp.task('watch', function() {
 	gulp.watch([tsPath], ['typescript'])
 });
 
-gulp.task('default', ['typescript', 'watch']);
+gulp.task('compile', ['clean', 'typescript']);
+gulp.task('default', ['clean', 'typescript', 'watch'])
