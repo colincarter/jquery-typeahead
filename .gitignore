@@ -1,3 +1,5 @@
 *.kpf
 .idea
 node_modules
+lib
+*.map

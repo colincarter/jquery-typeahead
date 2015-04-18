@@ -12,4 +12,4 @@ indent_size = 2
 trim_trailing_whitespace = false
 
 [*.{js,ts,json}]
-indent_size = 4
+indent_size = 2

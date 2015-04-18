@@ -1,3 +1,5 @@
+/// <reference path="./jquery.d.ts" />
+
 /**
 jquery-typeahead.js
 
@@ -21,16 +23,30 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
  *   scope: this // Scope to call the finish function in
   * }
  */
+
+interface jQuery {
+  typeAhead(options: Object | string, value: string);
+}
+//
+        //opts.finish.call(opts.scope, el, el.value, event);
+interface Options {
+  source: Array<string>;
+  scope: any;
+  finish(scope: any, el: HTMLInputElement, val: string, event: JQueryEventObject): void;
+}
+
 (function($) {
   $.fn.typeAhead = function(options, value) {
-    var emptyFn = function() {},
-        defaults = {
-          source: [],
-          finish: emptyFn,
-          scope: this
-        }, BACKSPACE = 8, DELETE = 46, IPHONE_BACKSPACE = 127,
-        iPhone = !!(window.orientation !== undefined),
-        opts;
+    var emptyFn = function() : void {};
+    var defaults = {
+      source: [],
+      finish: emptyFn,
+      scope: this
+    };
+    var BACKSPACE: number = 8;
+    var DELETE: number = 46;
+    var IPHONE_BACKSPACE: number = 127;
+    var opts : Options;
 
     opts = $.extend({}, defaults, options);
 
@@ -38,8 +54,9 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
       opts[options] = value;
     }
 
-    function selectText(el, start, end) {
-      var textRange;
+    function selectText(el: HTMLInputElement, start: number, end: number): void {
+      var textRange: TextRange;
+
       if (el.setSelectionRange) {
         // Gecko, Webkit
         el.focus();
@@ -56,8 +73,9 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
       }
     }
 
-    function setCursor(el, pos) {
-      var textRange;
+    function setCursor(el: HTMLInputElement, pos: number): void {
+      var textRange: TextRange;
+
       if (el.setSelectionRange) {
         el.setSelectionRange(pos, pos);
       } else if (el.createTextRange) {
@@ -68,8 +86,13 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
       }
     }
 
-    function searchFor(prefix) {
-      var i, len, src = opts.source, srcVal, prefixLen = prefix.length, srcValSub;
+    function searchFor(prefix): Array<string> | number {
+      var i: number,
+          len: number,
+          src: Array<string> = opts.source,
+          srcVal: string,
+          prefixLen: number = prefix.length,
+          srcValSub: string;
 
       prefix = prefix.toLowerCase();
 
@@ -83,23 +106,26 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
       return -1;
     }
 
-    return this.each(function(i, el) {
-      var elVal = el.value; // This is what the user is typing
+    return this.each((i: number, el: HTMLInputElement) => {
+      var elVal: string = el.value; // This is what the user is typing
 
       // Only on <input type="text"...> elements
       if (el.type !== 'text') {
         throw new Error('Cannot attach to non text elements');
       }
 
-      $(el).bind('blur.typeAhead', function(event) {
+      $(el).bind('blur.typeAhead', (event: JQueryEventObject): boolean => {
         opts.finish.call(opts.scope, el, el.value, event);
         return false;
       });
 
-      $(el).bind('keypress.typeAhead', function(event) {
-        var keyCode = event.which,
-            backspace = (keyCode === BACKSPACE || (iPhone && keyCode === IPHONE_BACKSPACE)),
-            charVal, suffix, str, strLen;
+      $(el).bind('keypress.typeAhead', (event: JQueryEventObject): void => {
+        var keyCode: number = event.which,
+            backspace: boolean = (keyCode === BACKSPACE),
+            charVal: string,
+            suffix: Array<string> | number,
+            str: string,
+            strLen: number;
 
         // Question: Why does a DELETE keyCode (46) == a period (.) in a keypress
         // but is 190 in a keydown and keyup?
@@ -132,9 +158,9 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY 
         }
       });
 
-      $(el).bind('keyup.typeAhead', function(event) {
-        var keyCode = event.which;
-        if (keyCode === BACKSPACE || keyCode === DELETE || (iPhone && keyCode === IPHONE_BACKSPACE)) {
+      $(el).bind('keyup.typeAhead', (event) => {
+        var keyCode: number = event.which;
+        if (keyCode === BACKSPACE || keyCode === DELETE) {
           // If they've pressed a backspace character reset our saved representation of the users input
           elVal = el.value;
         }
