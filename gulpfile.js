@@ -10,11 +10,11 @@ var gulp = require('gulp'),
 
 gulp.task('typescript', function() {
 	var tsResults = gulp.src(tsPath)
-						.pipe(ts({
-							target: 'ES5',
-							declarationFiles: false,
-							noExternalResolve: true
-						}));
+                    .pipe(ts({
+                          target: 'ES5',
+                          declarationFiles: false,
+                          noExternalResolve: true
+                          }));
 	tsResults.dts.pipe(gulp.dest(typeDefs));
 	return tsResults.js.pipe(gulp.dest(libPath));
 });
