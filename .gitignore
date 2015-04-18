@@ -1,1 +1,4 @@
 *.kpf
+.idea
+node_modules
+*.map

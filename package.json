@@ -1,0 +1,30 @@
+{
+  "name": "jquery-typeahead",
+  "version": "1.0.0",
+  "description": "jQuery.fn.typeAhead plugin",
+  "main": "lib/jquery-typeahead.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/colincarter/jquery-typeahead.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/colincarter/jquery-typeahead/issues"
+  },
+  "homepage": "https://github.com/colincarter/jquery-typeahead",
+  "devDependencies": {
+    "gulp": "^3.8.10",
+    "gulp-concat": "^2.4.3",
+    "gulp-plumber": "^0.6.6",
+    "gulp-typescript": "^2.4.0",
+    "gulp-uglify": "^1.1.0",
+    "del": "^1.1.1"
+  }
+}
